@@ -80,7 +80,7 @@ public class IsNullable extends AbstractPrecondition {
                 try {
                     if (rs.next()) {
                         log.debug("result=" + rs.getString(1));
-                        if (rs.getBoolean(0)) return;
+                        if (rs.getBoolean(1)) return;
                         // not nullable
                         throw new PreconditionFailedException(format("Column %s.%s.%s is not nullable",
                                 schemaName, tableName, columnName), databaseChangeLog, this);
