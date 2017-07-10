@@ -79,11 +79,19 @@ public class IsNullable extends AbstractPrecondition {
                 ResultSet rs = statement.executeQuery(sql);
                 try {
                     if (rs.next()) {
-                        log.debug("result=" + rs.getString(1));
-                        if (rs.getBoolean(1)) return;
-                        // not nullable
-                        throw new PreconditionFailedException(format("Column %s.%s.%s is not nullable",
-                                schemaName, tableName, columnName), databaseChangeLog, this);
+                        final String value = rs.getString(1);
+                        log.debug("result=" + value);
+                        switch (value.toLowerCase()) {
+                            case "yes":
+                            case "true":
+                                return;
+
+                                default:
+                                    // not nullable
+                                    throw new PreconditionFailedException(format("Column %s.%s.%s is not nullable",
+                                            schemaName, tableName, columnName), databaseChangeLog, this);
+
+                        }
                     } else {
                         // column does not exist
                         throw new PreconditionFailedException(format("Column %s.%s.%s does not exist",
